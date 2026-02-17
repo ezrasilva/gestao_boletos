@@ -21,14 +21,15 @@ const api = axios.create({
 });
 
 export const boletoService = {
-  listar: (status?: string, empresa?: string) => {
-  const params: any = {};
-  // Só envia o status se ele tiver um valor (evita enviar string vazia)
-  if (status && status !== "") params.status = status;
-  if (empresa) params.nome_empresa = empresa;
-  
-  return api.get('/boletos/', { params });
-},
+  listar: (params?: { status?: string; nome_empresa?: string; ano?: number }) => {
+    const query: any = {};
+    // Envia apenas filtros preenchidos
+    if (params?.status) query.status = params.status;
+    if (params?.nome_empresa) query.nome_empresa = params.nome_empresa;
+    if (params?.ano) query.ano = params.ano;
+
+    return api.get('/boletos/', { params: query });
+  },
     
   cadastrar: (dados: any) => api.post('/boletos/', dados),
   

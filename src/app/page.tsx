@@ -30,6 +30,8 @@ export default function Dashboard() {
   const [buscaEmpresa, setBuscaEmpresa] = useState('');
   const [statusFiltro, setStatusFiltro] = useState('');
   const [anoFiltro, setAnoFiltro] = useState(2026);
+  const [anoExport, setAnoExport] = useState(new Date().getFullYear());
+  const [mesExport, setMesExport] = useState(new Date().getMonth() + 1);
 
   // Estados dos Modais
   const [isBoletoModalOpen, setIsBoletoModalOpen] = useState(false);
@@ -66,18 +68,20 @@ export default function Dashboard() {
   const exportarExcel = async (tipo: 'mensal' | 'anual') => {
     setExportando(true);
     try {
-      const mesAtual = new Date().getMonth() + 1;
-      const url = tipo === 'mensal' 
-        ? `/relatorios/exportar/${anoFiltro}/${mesAtual}` 
-        : `/relatorios/exportar/${anoFiltro}`;
-      
-      const response = await relatorioService.exportarExcel(anoFiltro, tipo === 'mensal' ? mesAtual : undefined);
+      const anoSelecionado = anoExport || new Date().getFullYear();
+      const mesSelecionado = mesExport || new Date().getMonth() + 1;
+
+      const response = await relatorioService.exportarExcel(
+        anoSelecionado,
+        tipo === 'mensal' ? mesSelecionado : undefined
+      );
       
       // Lógica de download no navegador
       const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = downloadUrl;
-      link.setAttribute('download', `Relatorio_${tipo}_${anoFiltro}.xlsx`);
+      const mesParte = tipo === 'mensal' ? `_${String(mesSelecionado).padStart(2, '0')}` : '';
+      link.setAttribute('download', `Relatorio_${tipo}_${anoSelecionado}${mesParte}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -108,7 +112,35 @@ export default function Dashboard() {
 
           <div className="flex flex-wrap gap-3 w-full md:w-auto">
             {/* AÇÕES DE EXPORTAÇÃO */}
-            <div className="flex bg-white rounded-xl shadow-sm border border-slate-200 p-1">
+            <div className="flex flex-col md:flex-row bg-white rounded-xl shadow-sm border border-slate-200 p-2 gap-2">
+              <div className="flex gap-2">
+                <select
+                  className="bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-bold text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={mesExport}
+                  onChange={(e) => setMesExport(Number(e.target.value))}
+                >
+                  <option value={1}>Jan</option>
+                  <option value={2}>Fev</option>
+                  <option value={3}>Mar</option>
+                  <option value={4}>Abr</option>
+                  <option value={5}>Mai</option>
+                  <option value={6}>Jun</option>
+                  <option value={7}>Jul</option>
+                  <option value={8}>Ago</option>
+                  <option value={9}>Set</option>
+                  <option value={10}>Out</option>
+                  <option value={11}>Nov</option>
+                  <option value={12}>Dez</option>
+                </select>
+                <select
+                  className="bg-slate-50 border-none rounded-lg px-3 py-2 text-xs font-bold text-slate-600 outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={anoExport}
+                  onChange={(e) => setAnoExport(Number(e.target.value))}
+                >
+                  <option value={2025}>2025</option>
+                  <option value={2026}>2026</option>
+                </select>
+              </div>
               <button 
                 onClick={() => exportarExcel('mensal')}
                 disabled={exportando}
