@@ -19,10 +19,11 @@ Quagga.init({
       facingMode: 'environment',
       aspectRatio: { min: 1.777, max: 1.778 }, // Força 16:9
       // Propriedades avançadas para o foco
+    // PULO DO GATO: Tenta forçar o foco automático contínuo
       advanced: [
-        { focusMode: "continuous" },
-        { exposureMode: "continuous" }
-      ] as AdvancedMediaConstraints[]
+        { focusMode: "continuous" } as any,
+        { exposureMode: "continuous" } as any
+      ]
     } ,
     target: scannerRef.current,
   },
