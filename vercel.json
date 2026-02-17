@@ -3,10 +3,10 @@
     { "src": "package.json", "use": "@vercel/next" },
     { "src": "api/index.py", "use": "@vercel/python" }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
     }
   ]
 }
