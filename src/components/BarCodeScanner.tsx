@@ -10,28 +10,29 @@ export default function BarcodeScanner({ onScan, onClose }: any) {
     if (!scannerRef.current) return;
 
     Quagga.init({
-  inputStream: {
-    type: 'LiveStream',
-    constraints: {
-      width: { min: 1280 }, // Aumentar a resolução ajuda a distinguir as barras finas
-      height: { min: 720 },
-      facingMode: 'environment',
-      aspectRatio: { min: 1, max: 2 }
-    },
-    target: scannerRef.current,
-  },
-  locator: {
-    patchSize: 'medium', // 'medium' ou 'small' funcionam melhor para I2of5
-    halfSample: false,   // IMPORTANTE: Manter em false para não perder definição
-  },
-  decoder: {
-    readers: ['i2of5_reader'], // Foco exclusivo no padrão FEBRABAN
-  },
-  locate: true,
-}, (err) => {
-  if (err) return console.error(err);
-  Quagga.start();
-});
+      inputStream: {
+        type: 'LiveStream',
+        constraints: {
+          width: { min: 1280, ideal: 1920 },
+          height: { min: 720, ideal: 1080 },
+          facingMode: { ideal: 'environment' },
+          aspectRatio: { min: 1.3, max: 1.9 },
+          focusMode: 'continuous'
+        },
+        target: scannerRef.current,
+      },
+      locator: {
+        patchSize: 'large',
+        halfSample: false,
+      },
+      decoder: {
+        readers: ['i2of5_reader'],
+      },
+      locate: true,
+    }, (err) => {
+      if (err) return console.error(err);
+      Quagga.start();
+    });
 
 Quagga.onDetected((data) => {
       if (data.codeResult.code) {
@@ -48,7 +49,15 @@ Quagga.onDetected((data) => {
 
   return (
     <div className="fixed inset-0 bg-black z-[70] flex flex-col items-center justify-center">
-      <div ref={scannerRef} className="relative w-full h-[60vh] bg-gray-900" />
+      <div ref={scannerRef} className="scanner relative w-full h-[70vh] bg-gray-900 rounded-xl overflow-hidden" />
+      <style jsx>{`
+        .scanner :global(video),
+        .scanner :global(canvas) {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      `}</style>
       <button onClick={onClose} className="mt-8 bg-red-600 px-6 py-2 rounded-xl text-white font-bold">
         Fechar Scanner
       </button>
