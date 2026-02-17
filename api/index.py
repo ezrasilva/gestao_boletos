@@ -7,10 +7,8 @@ import io
 from fastapi.responses import StreamingResponse
 from datetime import date
 from typing import List, Optional
-import models
-import schemas
-import database
-from utils import reports
+from . import models, schemas, database
+from .utils import reports
 import os
 
 
