@@ -7,12 +7,12 @@ import io
 from fastapi.responses import StreamingResponse
 from datetime import date
 from typing import List, Optional
-from . import models, schemas, database
-from .utils import reports
+import models
+import schemas
+import database
+from utils import reports
 import os
 
-# Cria as tabelas no banco
-models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI()
 
