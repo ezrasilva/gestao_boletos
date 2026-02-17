@@ -43,6 +43,7 @@ def get_db():
 
 # --- ROTAS DE EMPRESA ---
 
+@app.post("/empresas", include_in_schema=False)
 @app.post("/empresas/", response_model=schemas.Empresa)
 def criar_empresa(empresa: schemas.EmpresaCreate, db: Session = Depends(get_db)):
     if db.query(models.Empresa).filter(models.Empresa.cnpj == empresa.cnpj).first():
@@ -53,12 +54,14 @@ def criar_empresa(empresa: schemas.EmpresaCreate, db: Session = Depends(get_db))
     db.refresh(nova_empresa)
     return nova_empresa
 
+@app.get("/empresas", include_in_schema=False)
 @app.get("/empresas/", response_model=List[schemas.Empresa])
 def listar_empresas(db: Session = Depends(get_db)):
     return db.query(models.Empresa).all()
 
 # --- ROTAS DE BOLETO ---
 
+@app.get("/boletos", include_in_schema=False)
 @app.get("/boletos/", response_model=List[schemas.Boleto])
 def listar_boletos(
     status: Optional[str] = Query(None, pattern="^(pagos|vencidos|abertos|)$"),
@@ -81,6 +84,7 @@ def listar_boletos(
 
     return query.all()
 
+@app.post("/boletos", include_in_schema=False)
 @app.post("/boletos/", response_model=schemas.Boleto)
 def criar_boleto(boleto: schemas.BoletoCreate, db: Session = Depends(get_db)):
     # Valida se a empresa existe
