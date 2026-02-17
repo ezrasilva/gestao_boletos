@@ -14,10 +14,15 @@ import FinancialChart from '@/components/FinancialChart';
 import BoletoFormModal from '@/components/BoletoFormModal';
 import EmpresaFormModal from '@/components/EmpresaFormModal';
 
+type RelatorioFinanceiro = {
+  detalhe_mensal?: Record<string, { total_valor: number; quantidade: number }>;
+  top_5_fornecedores?: Record<string, number>;
+};
+
 export default function Dashboard() {
   // Estados de Dados e UI
-  const [boletos, setBoletos] = useState([]);
-  const [relatorio, setRelatorio] = useState(null);
+  const [boletos, setBoletos] = useState<any[]>([]);
+  const [relatorio, setRelatorio] = useState<RelatorioFinanceiro | null>(null);
   const [loading, setLoading] = useState(true);
   const [exportando, setExportando] = useState(false);
 
