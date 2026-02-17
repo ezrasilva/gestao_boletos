@@ -1,0 +1,15 @@
+{
+  "buildCommand": "pip install -r api/requirements.txt && npm run build",
+  "outputDirectory": ".",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    }
+  ],
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.11"
+    }
+  }
+}
