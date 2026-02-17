@@ -12,13 +12,16 @@ from .utils import reports
 import os
 
 
-app = FastAPI()
+root_path = "/api" if os.getenv("VERCEL") else ""
+app = FastAPI(root_path=root_path)
 
 # Configuração de CORS - Vercel + Localhost
+vercel_host = os.getenv("VERCEL_URL", "")
+vercel_origin = f"https://{vercel_host}" if vercel_host else ""
 allowed_origins = [
     "http://localhost:3000",
     "http://localhost:3001",
-    os.getenv("VERCEL_URL", "").replace("https://", "https://"),  # Vercel próprio
+    vercel_origin,
 ]
 # Remove URLs vazias
 allowed_origins = [url for url in allowed_origins if url]
