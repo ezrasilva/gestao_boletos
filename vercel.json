@@ -1,15 +1,15 @@
 {
-  "buildCommand": "pip install -r api/requirements.txt && npm run build",
-  "outputDirectory": ".",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index"
+      "destination": "/api"
     }
   ],
   "functions": {
-    "api/index.py": {
-      "runtime": "python3.11"
+    "api/*.py": {
+      "runtime": "@vercel/python@3.11"
     }
   }
 }
