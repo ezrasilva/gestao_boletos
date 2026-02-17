@@ -9,29 +9,36 @@ export default function BarcodeScanner({ onScan, onClose }: any) {
   useEffect(() => {
     if (!scannerRef.current) return;
 
-    Quagga.init({
-      inputStream: {
-        type: 'LiveStream',
-        constraints: {
-          width: { min: 1280, ideal: 1920 },
-          height: { min: 720, ideal: 1080 },
-          facingMode: { ideal: 'environment' },
-          aspectRatio: { min: 1.3, max: 1.9 }
-        },
-        target: scannerRef.current,
-      },
-      locator: {
-        patchSize: 'large',
-        halfSample: false,
-      },
-      decoder: {
-        readers: ['i2of5_reader'],
-      },
-      locate: true,
-    }, (err) => {
-      if (err) return console.error(err);
-      Quagga.start();
-    });
+    // No teu BarCodeScanner.tsx
+Quagga.init({
+  inputStream: {
+    type: 'LiveStream',
+    constraints: {
+      width: { min: 1920, ideal: 1920 }, // Tenta forçar 1080p
+      height: { min: 1080, ideal: 1080 },
+      facingMode: 'environment',
+      aspectRatio: { min: 1.777, max: 1.778 }, // Força 16:9
+      // Propriedades avançadas para o foco
+      advanced: [
+        { focusMode: "continuous" },
+        { exposureMode: "continuous" }
+      ] as AdvancedMediaConstraints[]
+    } ,
+    target: scannerRef.current,
+  },
+  numOfWorkers: navigator.hardwareConcurrency || 4, // Usa o máximo de núcleos do teu telemóvel
+  locator: {
+    patchSize: 'medium',
+    halfSample: false, // Mantém false para não perder definição
+  },
+  decoder: {
+    readers: ['i2of5_reader'], 
+  },
+  locate: true,
+}, (err) => {
+  if (err) return console.error(err);
+  Quagga.start();
+});
 
 Quagga.onDetected((data) => {
       if (data.codeResult.code) {
@@ -62,4 +69,9 @@ Quagga.onDetected((data) => {
       </button>
     </div>
   );
+}
+
+interface AdvancedMediaConstraints extends MediaTrackConstraintSet {
+  focusMode?: ConstrainDOMString;
+  exposureMode?: ConstrainDOMString;
 }
