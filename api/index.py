@@ -12,8 +12,7 @@ from .utils import reports
 import os
 
 
-root_path = "/api" if os.getenv("VERCEL") else ""
-app = FastAPI(root_path=root_path)
+app = FastAPI()
 
 # Configuração de CORS - Vercel + Localhost
 vercel_host = os.getenv("VERCEL_URL", "")
