@@ -292,6 +292,7 @@ export default function BoletoFormModal({ isOpen, onClose, onSuccess }: Props) {
             
             setIsScannerOpen(false);
           }}
+          onClose={() => setIsScannerOpen(false)}
         />
       )}
     </div>
