@@ -16,8 +16,7 @@ export default function BarcodeScanner({ onScan, onClose }: any) {
           width: { min: 1280, ideal: 1920 },
           height: { min: 720, ideal: 1080 },
           facingMode: { ideal: 'environment' },
-          aspectRatio: { min: 1.3, max: 1.9 },
-          focusMode: 'continuous'
+          aspectRatio: { min: 1.3, max: 1.9 }
         },
         target: scannerRef.current,
       },
